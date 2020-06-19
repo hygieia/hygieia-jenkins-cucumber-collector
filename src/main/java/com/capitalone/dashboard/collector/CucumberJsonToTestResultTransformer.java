@@ -100,11 +100,11 @@ public class CucumberJsonToTestResultTransformer implements Transformer<String, 
         testCase.setId(getString(scenarioElement, "id"));
         testCase.setDescription(getString(scenarioElement, "keyword") + ":" + getString(scenarioElement, "name"));
         // Parse each step as a TestCase
-        int testStepSuccessCount = 0, testStepFailCount = 0, testStepSkippedCount = 0, testStepUnknownCount = 0;
+        int testStepSuccessCount = 0, testStepFailCount = 0, testStepSkippedCount = 0, testStepUnknownCount = 0, hookCounter = 0;
         long testDuration = 0;
 
         for (Object step : getJsonArray(scenarioElement, "steps")) {
-            TestCaseStep testCaseStep = parseStepAsTestCaseStep((JSONObject) step);
+            TestCaseStep testCaseStep = parseStepAsTestCaseStep((JSONObject) step, hookCounter++);
             testDuration += testCaseStep.getDuration();
             // Count Statuses
             switch(testCaseStep.getStatus()) {
@@ -149,10 +149,18 @@ public class CucumberJsonToTestResultTransformer implements Transformer<String, 
         return testCase;
     }
 
-    private TestCaseStep parseStepAsTestCaseStep(JSONObject stepObject) {
+    private TestCaseStep parseStepAsTestCaseStep(JSONObject stepObject, int hookCounter) {
         TestCaseStep step  = new TestCaseStep();
-        step.setDescription(getString(stepObject, "keyword") + ":" + getString(stepObject, "name"));
-        step.setId(stepObject.get("line").toString());
+
+        if (getBool(stepObject, "hidden") == true) {
+            step.setDescription(getString(stepObject, "keyword") + ":" + "hook");
+            // since the "line" property doesn't exist on hooks and to ensure the step id stays unique
+            step.setId("000" + Integer.toString(hookCounter));
+        } else {
+            step.setDescription(getString(stepObject, "keyword") + ":" + getString(stepObject, "name"));
+            step.setId(stepObject.get("line").toString());
+        }
+
         TestCaseStatus stepStatus = TestCaseStatus.Unknown;
 
         Object resultObj = stepObject.get("result");
@@ -192,5 +200,10 @@ public class CucumberJsonToTestResultTransformer implements Transformer<String, 
     private long getLong(JSONObject json, String key) {
         Object obj = json.get(key);
         return obj == null ? 0 : (long) obj;
+    }
+
+    private boolean getBool(JSONObject json, String key) {
+        Object obj = json.get(key);
+        return obj == null ? false : (boolean) obj;
     }
 }
