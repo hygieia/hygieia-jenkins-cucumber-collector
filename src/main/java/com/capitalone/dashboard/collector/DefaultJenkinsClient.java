@@ -1,6 +1,5 @@
 package com.capitalone.dashboard.collector;
 
-
 import com.capitalone.dashboard.model.Build;
 import com.capitalone.dashboard.model.JenkinsJob;
 import com.capitalone.dashboard.model.TestCapability;
@@ -8,7 +7,7 @@ import com.capitalone.dashboard.model.TestCaseStatus;
 import com.capitalone.dashboard.model.TestResult;
 import com.capitalone.dashboard.model.TestSuite;
 import com.capitalone.dashboard.model.TestSuiteType;
-import com.capitalone.dashboard.util.Supplier;
+import com.capitalone.dashboard.client.RestOperationsSupplier;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,7 +54,7 @@ public class DefaultJenkinsClient implements JenkinsClient {
     private static final String LAST_SUCCESSFUL_BUILD_ARTIFACT_SUFFIX = "/lastSuccessfulBuild/api/json?tree=timestamp,duration,number,fullDisplayName,building,artifacts[fileName,relativePath]";
 
     @Autowired
-    public DefaultJenkinsClient(Supplier<RestOperations> restOperationsSupplier,
+    public DefaultJenkinsClient(RestOperationsSupplier restOperationsSupplier,
                                 Transformer<String, List<TestSuite>> cucumberTransformer,
                                 JenkinsSettings settings) {
         this.rest = restOperationsSupplier.get();

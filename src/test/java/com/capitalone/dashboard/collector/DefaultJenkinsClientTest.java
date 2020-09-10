@@ -8,7 +8,7 @@ import com.capitalone.dashboard.model.TestCaseStatus;
 import com.capitalone.dashboard.model.TestResult;
 import com.capitalone.dashboard.model.TestSuite;
 import com.capitalone.dashboard.model.TestSuiteType;
-import com.capitalone.dashboard.util.Supplier;
+import com.capitalone.dashboard.client.RestOperationsSupplier;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +43,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultJenkinsClientTest {
 
-    @Mock private Supplier<RestOperations> restOperationsSupplier;
+    @Mock private RestOperationsSupplier restOperationsSupplier;
 //    @Mock private CucumberJsonToTestResultTransformer transformer;
     @Mock private RestOperations rest;
 

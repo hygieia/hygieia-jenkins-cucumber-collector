@@ -84,11 +84,11 @@ public class JenkinsCucumberTestCollectorTask extends
             log("Fetched jobs", start);
 
             addNewJobs(buildsByJob.keySet(), collector);
-            
+
             List<JenkinsJob> enabledJobs = enabledJobs(collector, instanceUrl);
             if ( ! enabledJobs.isEmpty())
             {
-                addNewTestSuites(enabledJobs); 
+                addNewTestSuites(enabledJobs);
             }
             else
             {
